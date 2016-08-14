@@ -445,11 +445,12 @@ data Message =
              |
                HistoryRequest
                  { header :: MessageHeader
-                 , historyGetOutput :: Bool  -- ^ If True, also return output history in the resulting
-                                             -- dict.
-                 , historyRaw :: Bool        -- ^ If True, return the raw input history, else the
-                                             -- transformed input.
+                 , historyGetOutput :: Bool               -- ^ If True, also return output history in the resulting
+                                                          --   dict.
+                 , historyRaw :: Bool                     -- ^ If True, return the raw input history, else the
+                                                          --   transformed input.
                  , historyAccessType :: HistoryAccessType -- ^ What history is being requested.
+                 --, historyAccessData :: HistoryAccessData -- ^ The history request data for a given access type.
                  }
              | HistoryReply { header :: MessageHeader, historyReply :: [HistoryReplyElement] }
              | SendNothing -- Dummy message; nothing is sent.
@@ -460,6 +461,21 @@ data Message =
 data HistoryAccessType = HistoryRange
                        | HistoryTail
                        | HistorySearch
+  deriving (Eq, Show)
+
+-- | Possible ways to interpret request history data. 
+data HistoryAccessData = 
+        HistoryRangeData 
+          { historyRangeSession :: Int
+          , historyRangeStart :: Int
+          , historyRangeStop :: Int 
+          }
+      | HistoryTailData { historyTailN :: Int }
+      | HistorySearchData 
+          { historySearchN :: Int
+          , historySearchPattern :: String
+          , historySearchUnique :: Bool 
+          }
   deriving (Eq, Show)
 
 -- | Reply to history requests.

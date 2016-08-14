@@ -195,6 +195,7 @@ historyRequestParser = requestParser $ \obj ->
           "search" -> HistorySearch
           str      -> error $ "Unknown history access type: " ++ str
 
+
 statusMessageParser :: LByteString -> Message
 statusMessageParser = requestParser $ \obj -> do
   execution_state <- obj .: "execution_state"
